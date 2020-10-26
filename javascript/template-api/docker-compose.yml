@@ -1,0 +1,23 @@
+version: '3'
+services: 
+
+  postgresdb:
+    build: 
+      context: ./dockerfiles
+      dockerfile: postgres
+    ports:
+      - "5432:5432"
+  
+  mongodb:
+    build:
+      context: ./dockerfiles
+      dockerfile: mongo
+    ports:
+      - "27017:27017"
+  
+  redisdb:
+    build:
+      context: ./dockerfiles
+      dockerfile: redis
+    ports:
+      - "6379:6379"

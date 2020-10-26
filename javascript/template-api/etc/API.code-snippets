@@ -1,0 +1,526 @@
+{
+
+	// #@@@@# MIGRATION #@@@@#
+	"Migration Template Column": {
+		"prefix": "migTemplateColumn",
+		"body": [
+			"module.exports = {",
+			"up: (queryInterface, Sequelize) => {",
+			"return queryInterface.addColumn(",
+			"'${1:Table_Name}',",
+			"'${2:Column_Name}',",
+			"{",
+			"type: Sequelize.INTEGER,",
+			"//references: { model: 'DB_TABLE_NAME', key: 'DB_TABLE_COLUMN_NAME' },",
+			"onUpdate: 'CASCADE',",
+			"onDelete: 'SET NULL',",
+			"allowNull: true,",
+			"});",
+			"},",
+			"down: (queryInterface) => {",
+			"return queryInterface.removeColumn('${1:Table_Name}', '${2:Column_Name}');",
+			"}",
+			"};",
+			"",
+		]
+	},
+
+	"Create Migration Table": {
+		"prefix": "migTemplateTable",
+		"body": [
+			"module.exports = {",
+			"up: (queryInterface, Sequelize) => {",
+			"return queryInterface.createTable('${1:table name}', {",
+			
+			"id: {",
+			"type: Sequelize.INTEGER,",
+			"allowNull: false,",
+			"autoIncrement: true,",
+			"primaryKey: true,",
+			"},",
+			"",
+
+			"name: {",
+			"type: Sequelize.STRING,",
+			"allowNull: false,",
+			"//references: { model: 'DB_TABLE_NAME', key: 'DB_TABLE_COLUMN_NAME' },",
+			"},",
+			"",
+
+			"created_at: {",
+			"type: Sequelize.DATE,",
+			"allowNull: false,",
+			"},",
+			"",
+
+			"updated_at: {",
+			"type: Sequelize.DATE,",
+			"allowNull: false,",
+			"},",
+			"});",
+			"},",
+			"",
+			"down: queryInterface => {",
+			"return queryInterface.dropTable('${1:table name}');",
+			"},",
+			"};",
+		]
+	},
+
+
+
+	// #@@@@# MODELS #@@@@#
+	"Model Template": {
+		"prefix": "modelTemplate",
+		"body": [
+				"import Sequelize, { Model } from 'sequelize';",
+				"",
+				"class $TM_FILENAME_BASE extends Model {",
+				"static init(sequelize) {",
+				"super.init(",
+				"{",
+				"name: Sequelize.${1|STRING,INTEGER,BOOLEAN|},",
+				"",
+				"},",
+				"{",
+					"sequelize,",
+				"}",
+				");",
+				"",
+				"//this.addHook('type', async user =>{ user.name ... await ... })",
+				"",
+				"return this;",
+				"}",
+				"",
+				"}",
+				"",
+				"export default $TM_FILENAME_BASE;",
+				"",
+		],
+		"description": "src/app/models/Name.js"
+	},
+
+	"Create Model Association": {
+		"prefix": "modelAssociate",
+		"body": [
+			"static associate(models) {",
+			"this.belongsTo(models.${1:EXTERNAL_MODEL_Name}, { foreignKey: '${2:FK_Local_Column_Name}', as: '${3:Relationship_Codename}' });",
+			"}",
+			"",
+		]
+	},
+
+	"Create Model Virtual Column": {
+		"prefix": "virtualColumn",
+		"body": [
+			"${1:VIRTUAL_COLUMN}: {",
+			"type: Sequelize.VIRTUAL,",
+			"get(){",
+			"return `id_value = ${this.id}`;",
+			"},",
+			"},",
+			"",
+		]
+	},
+	
+
+
+	// #@@@@# CONTROLERS #@@@@#
+	"Create Controller": {
+		"prefix": "controlTemplate",
+		"body": [
+				"//import * as Yup from 'yup';",
+				"//import ${TM_FILENAME_BASE/C\\w{1,}r//g} from '../models/${TM_FILENAME_BASE/C\\w{1,}r//g}';",
+				"",
+				"class $TM_FILENAME_BASE {",
+				"",
+				"async index(req, res) {",
+				"",
+				"return res.json({index: true});",
+				"}",
+				"",
+				"}",
+				"",
+				"export default new $TM_FILENAME_BASE();",
+		],
+		"description": "src/app/controllers/NameController.js"
+	},
+
+	"Import Controller": {
+		"prefix": "controlImport",
+		"body": [
+				"import $1Controller from './app/controllers/$1Controller';",
+				"",
+				"routes.$2('/$3', $1Controller.$4)"
+		]
+	},
+
+	"Async Index": {
+		"prefix": "asIndex",
+		"body": [
+				"async index(req, res) {",
+				"return res.json({ index: true });",
+				"}"
+		]
+	},
+
+	"Async Store": {
+		"prefix": "asStore",
+		"body": [
+				"async store(req, res) {",
+				"return res.json({ store: true });",
+				"}"
+		]
+	},
+
+	"Async Update": {
+		"prefix": "asUpdate",
+		"body": [
+				"async update(req, res) {",
+				"return res.json({ update: true });",
+				"}"
+		]
+	},
+
+	"Async Delete": {
+		"prefix": "asDelete",
+		"body": [
+				"async delete(req, res) {",
+				"return res.json({ delete: true });",
+				"}"
+		]
+	},
+
+	"Sequelize findByPk()": {
+		"prefix": "findByPk",
+		"body": [
+		"const ${1:CONST_NAME} = await ${2:Model_Name}.findByPk(${3:PRIMARY_KEY});",
+		]
+	},
+
+	"Sequelize findOne()": {
+		"prefix": "findOne",
+		"body": [
+		"const ${1:CONST_NAME} = await ${2:Model_Name}.findOne({",
+		"where: {${3:Column}: ${4:Value}},",
+		"//attributes: ['column', 'column'],",
+		"//include: [",
+		"//{",
+		"//model: IMPORT_MODEL_NAME,",
+		"//as: 'MODEL_Relationship_Codename',",
+		"//attributes: ['column', 'column'],",
+		"//}",
+		"//]",
+		"});",
+		]
+	},
+
+	"Sequelize FindAll()": {
+		"prefix": "findAll",
+		"body": [
+		"const ${1:CONST_NAME} = await ${2:Model_Name}.findAll({",
+		"where: {COLUMN: VALUE},",
+		"",
+		"//attributes: ['COLUMN', 'COLUMN'],",
+		"//order: ['COLUMN'],",
+		"//limit, // const limit = 1;",
+		"//offset: (page - 1) * limit, // const {page = 1} = req.query",
+		"",
+		"//include: [",
+		"//{",
+		"//model: IMPORT_MODEL_NAME,",
+		"//as: 'MODEL_Relationship_Codename',",
+		"//attributes: ['column', 'column'],",
+		"//}",
+		"//]",
+		"",
+		"});",
+		]
+	},
+
+	"Sequelize Model.create()": {
+		"prefix": "createValue",
+		"body": [
+		"const ${1:CONST_NAME} = await ${2:Model_Name}.create({",
+		"value: value,",
+		"});",
+		]
+	},
+
+
+
+	// #@@@@# MAIL #@@@@#
+	"Mail Default": {
+		"prefix": "mailDefaultTemplate",
+		"body": [
+				"<div style=\"font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 1.6; color: #222\">",
+				"{{{ body }}}",
+				"//{{> ${partial} }}",
+				"</div>",
+				""
+		],
+		"description": "src/app/views/emails/layouts/default.hbs"
+	},
+
+	"Mail Template": {
+		"prefix": "mailTemplate",
+		"body": [
+				"<strong>Lorem, {{ ${prop} }}</strong>",
+				"<p>Lorem Ipsum: {{ ${prop} }}</p>",
+				"",
+		]
+	},
+	
+	"Mail Send": {
+		"prefix": "mailSend",
+		"body": [
+		"await Mail.sendMail({",
+		"to: `${name} <${email}>`,",
+		"subject: '${SUBJECT}',",
+		"template: '${TEMPLATE}',",
+		"context: {",
+		"${attribute}: ${value},",
+		"",
+		"},",
+		"});",
+		]
+	},
+
+
+	// #@@@@# BEE QUEUE #@@@@#
+	"Job Template": {
+		"prefix": "jobTemplate",
+		"body": [
+				"class $TM_FILENAME_BASE {",
+				"get key() {",
+				"return '$TM_FILENAME_BASE';",
+				"};",
+				"",
+				"async handle({ data }) {",
+				"const { object } = data;",
+				"// console.log(object);",
+				"",
+				"// await function",
+				"}",
+				"}",
+				"",
+				"export default new $TM_FILENAME_BASE();",
+				"",
+		]
+	},
+	
+	"Job Template Mail": {
+		"prefix": "jobTemplateMail",
+		"body": [
+				"import Mail from '../../lib/Mail';",
+				"// import pt from 'date-fns/locale/pt';",
+				"// import { format, parseISO } from 'date-fns';",
+				"",
+				"class $TM_FILENAME_BASE {",
+				"get key() {",
+				"return '$TM_FILENAME_BASE';",
+				"};",
+				"",
+				"async handle({ data }) {",
+				"const { objects } = data;",
+				"// console.log(object);",
+				"",
+				"// const formattedDate = format(parseISO(${1:objects}.date),\"dd 'de' MMMM\",{locale: pt,});",
+				"",
+				"await Mail.sendMail({",
+				"to: `${name} <${email}>`,",
+				"subject: '${SUBJECT}',",
+				"template: '${TEMPLATE}',",
+				"context: {",
+				"${attribute}: ${value: objects.${value},},",
+				"",
+				"},",
+				"});",
+				"",
+				"}",
+				"}",
+				"",
+				"export default new $TM_FILENAME_BASE();",
+				"",
+		]
+	},
+
+	"Job Create": {
+		"prefix": "jobCreate",
+		"body": [
+				"// import Queue from '../../lib/Queue'",
+				"//import ${JOB} from '../jobs/${JOB}';",
+				"await Queue.add(${JOB}.key, { object });",
+				"",
+		]
+	},
+
+
+	// #@@@@# MIDDLEWARES #@@@@#
+	"Middleware Template": {
+		"prefix": "middleTemplate",
+		"body": [
+				"export default async (req, res, next) => {",
+				"//await ...",
+				"return next();",
+				"}"
+		]
+	},
+
+	"Middleware Local Import": {
+		"prefix": "middleImportLocal",
+		"body": [
+				"import $1Middleware from './app/middlewares/$1';",
+		]
+	},
+
+	"Middleware Global Import": {
+		"prefix": "middleImportGlobal",
+		"body": [
+				"import $1Middleware from './app/middlewares/$1';",
+				"routes.use($1Middleware);"
+		]
+	},
+
+
+
+	// #@@@@# YUP VALIDATIONS #@@@@#
+	"Yup Validation": {
+		"prefix": "yupValidation",
+		"body": [
+				"const schema = Yup.object().shape({",
+				"name: Yup.string().required()",
+				"});",
+				"",
+				"if (!(await schema.isValid(req.body))) {",
+				"return res.status(400).json({ error: 'Validation Fail' });",
+				"}",
+		]
+	},
+
+
+
+	// #@@@@# MULTER FILE UPLOADS #@@@@#
+	"Multer Model": {
+		"prefix": "multerModel",
+		"body": [
+			"import Sequelize, { Model } from 'sequelize';",
+			"class $TM_FILENAME_BASE extends Model {",
+			"static init(sequelize) {",
+			"super.init(",
+			"{",
+			"name: Sequelize.STRING,",
+			"path: Sequelize.STRING,",
+
+			"url: {",
+			"type: Sequelize.VIRTUAL,",
+			"get(){",
+			"return `${process.env.APP_URL}/files/${this.path}`;",
+			"},",
+			"},",
+
+
+			"},",
+			"{",
+			"sequelize,",
+			"}",
+			");",
+			"",
+			"return this;",
+			"}",
+			"}",
+			"",
+			"export default $TM_FILENAME_BASE;",
+			"",
+			"// >>> database/index.js",
+			"//import $TM_FILENAME_BASE from '../app/models/$TM_FILENAME_BASE';",
+		]
+	},
+
+	"Multer Controller | File upload": {
+		"prefix": "multerControl",
+		"body": [
+			"import File from '../models/File';",
+			"",
+			"class $TM_FILENAME_BASE {",
+			"async store(req, res) {",
+			"const { originalname: name, filename: path } = req.file;",
+			"",
+			"const file = await File.create({",
+			"name,",
+			"path,",
+			"});",
+			"",
+			"return res.json(file);",
+			"",
+			"}",
+			"}",
+			"export default new $TM_FILENAME_BASE();",
+		]
+	},
+
+	"Multer Import": {
+		"prefix": "multerImport",
+		"body": [
+			"routes.post('/${ROUTE}', upload.single('${FIELD}'), ${CONTROLER}.store);",
+		]
+	},
+
+
+// #@@@@# MONGODB #@@@@#
+	"Mongo Schema": {
+		"prefix": "mongoSchemaTemplate",
+		"body": [
+		"import mongoose from 'mongoose';",
+		"",
+		"const ${TM_FILENAME_BASE}Schema = new mongoose.Schema(",
+		"{",
+		"content: {",
+		"type: ${1|String,Number,Boolean,Array|},",
+		"require: true,",
+		"},",
+		"",
+		"},",
+		"",
+		"{",
+		"timestamps: true,",
+		"}",
+		");",
+		"",
+		"export default mongoose.model('${TM_FILENAME_BASE}', ${TM_FILENAME_BASE}Schema);",
+		"",
+		]
+	},
+
+	"Mongo Create": {
+		"prefix": "mongoCreate",
+		"body": [
+		"await ${1:MONGO_Schema}.create({",
+		"value: value,",
+		"});"
+		]
+	},
+
+	"Mongo Find": {
+		"prefix": "mongoFind",
+		"body": [
+		"const ${1:CONST_NAME} = await ${2:MONGO_Schema}.find({",
+		"value: value,",
+		"})",
+		"//.sort({ column: 'asc|desc'}),",
+		"//.limit(NUM),"
+		]
+	},
+
+	"Mongo Find and Update": {
+		"prefix": "mongoUpdate",
+		"body": [
+		"const ${1:CONST_NAME} = await ${2:MONGO_Schema}.findByIdAndUpdate(",
+		"req.params.id,",
+		"{ column: value },",
+		"{ new: true }",
+		")"
+		]
+	},
+
+}
